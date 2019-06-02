@@ -659,6 +659,11 @@ static NSMutableDictionary* globalSVGKImageCache;
 	{
 		SVGUseElement* useElement = (SVGUseElement*) element;
 		element = (SVGElement <ConverterSVGToCALayer> *)useElement.instanceRoot.correspondingElement;
+        
+        // ----------- temp fix
+        if (![element isKindOfClass:[SVGElement class]]) {
+            return layer;
+        }
 		
 		saveParentNode = element.parentNode;
 		element.parentNode = useElement;
@@ -672,9 +677,11 @@ static NSMutableDictionary* globalSVGKImageCache;
     {
         childNodes = [(SVGSwitchElement*) element visibleChildNodes];
     }
+    
     /**
      Special handling for clip-path; need to create their children
      */
+
     NSString* clipPath = [element cascadedValueForStylableProperty:@"clip-path" inherit:NO];
     if ( [clipPath hasPrefix:@"url"] )
     {
